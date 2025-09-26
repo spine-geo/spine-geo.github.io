@@ -1,1 +1,1 @@
-# spine-geo.github.io
+# Geometry Meets Vision: Revisiting Pretrained Semantics in Distilled Fields
