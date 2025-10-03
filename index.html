@@ -6,11 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Geometry Meets Vision: Revisiting Pretrained Semantics in Distilled Fields</title>
 
+    <!--  =====  MATHJAX  =====  -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <!--  =====  FONTS & ICONS  =====  -->
     <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <link rel="icon" href="./static/icon.png" />
+    <link rel="icon" href="./static/assets/icon.png" />
 
     <!--  =====  CSS  =====  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" />
@@ -118,6 +121,10 @@
             display: block;
         }
 
+        .thumb-video video {
+            border-radius: 5px;
+        }
+
         /* --- STAND‑ALONE VIDEOS --- */
         .overview-video,
         .sim-video {
@@ -217,8 +224,17 @@
     <section class="hero section">
         <div class="hero-body">
             <div class="container is-max-widescreen has-text-centered">
-                <h1 class="title is-2 publication-title">Geometry Meets Vision: <br /> Revisiting Pretrained Semantics
-                    in Distilled Fields
+                <h1 class="title is-2 publication-title">
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <div style="flex: 0 0 18%; text-align: center;">
+                            <img src="static/assets/icon.png" alt="Icon" style="height: 3.5em; max-width: 100%;">
+                        </div>
+                        <div style="flex: 0 0 82%; text-align: left;">
+                            <em>Geometry Meets Vision</em>: <br />
+                            <span style="font-size: xx-large;"> Revisiting Pretrained Semantics in Distilled
+                                Fields </span>
+                        </div>
+                    </div>
                 </h1>
 
                 <!-- ===== AUTHORS (three rows, no underscores) ===== -->
@@ -242,12 +258,12 @@
                         rel="noopener">
                         <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper (Coming Soon!)</span>
                     </a>
-                    <a href="#" class="external-link button is-normal is-rounded is-dark"
-                        target="_blank" rel="noopener">
+                    <a href="#" class="external-link button is-normal is-rounded is-dark" target="_blank"
+                        rel="noopener">
                         <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv (Coming Soon!)</span>
                     </a>
-                    <a href="#" class="external-link button is-normal is-rounded is-dark"
-                        target="_blank" rel="noopener">
+                    <a href="#" class="external-link button is-normal is-rounded is-dark" target="_blank"
+                        rel="noopener">
                         <span class="icon"><i class="fab fa-youtube"></i></span><span>Video (Coming Soon!)</span>
                     </a>
                     <a href="#" class="external-link button is-normal is-rounded is-dark" target="_blank"
@@ -259,7 +275,7 @@
                 <!-- ===== LAB LOGO ===== -->
 
                 <figure class="image is-inline-block lab-logo">
-                    <img src="static/irom_princeton.png" alt="IROM Lab logo" style="max-width:500px;">
+                    <img src="static/assets/irom_princeton.png" alt="IROM Lab logo" style="max-width:500px;">
                 </figure>
 
             </div>
@@ -274,9 +290,9 @@
                 Your browser does not support the video tag.
             </video>
             <p style="margin-top:1rem;">
-                We explore the relative performance of visual-geometry semantics in radiance fields, asking:
+                We explore visual-geometry semantics in radiance fields, asking:
                 <em>Do geometry-grounded semantic features offer an edge in distilled fields?</em>
-                and introduce <strong>SPINE</strong>, a semantics-based method for inverting radiance fields
+                and introduce <strong>SPINE</strong>, a semantics-centric method for inverting radiance fields
                 without an initial guess.
             </p>
         </div>
@@ -327,15 +343,35 @@
     <section id="feature-distillation" class="section">
         <div class="container is-max-desktop content-container">
             <h2 class="title is-3 has-text-centered">SPINE: Distilling Semantic Features in Radiance Fields</h2>
-            <video class="overview-video" autoplay loop muted playsinline poster="static/thumbnails/.jpg">
-                <source src="static/videos/overviews/architecture.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-            <br>
             <p>
-                (left) Semantics distillation architecture, showing co-supervision of CLIP with
-                DINO/VGGT via base semantics module. (right) VGGT's semantic embeddings from different heads, 
-                showing high-fidelity geometric content of the point head.
+                Increasingly,
+                robot policies have embedded semantics from vision foundation models into
+                radiance fields to enable language-conditioned robot manipulation,
+                mapping, and object localization.
+                However, these policies are generally limited to visual-only image features (e.g., DINO) combined with
+                the vision-language semantics of CLIP.
+                Here, we present an method for distilling visual-geometry semantics into radiance fields.
+
+                <video class="overview-video" autoplay loop muted playsinline
+                    poster="static/thumbnails/architecture.jpg">
+                    <source src="static/videos/overviews/architecture.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+
+                We extract ground-truth pretrained
+                semantic embeddings for each image from the depth and point heads of VGGT and its intermediate layers,
+                which were trained for depth estimation and dense point cloud reconstruction, respectively. We visualize
+                these semantic embeddings on the right side of the figure using the first three principal
+                components.
+
+                We learn a semantic field \({f_{s}: \mathbb{R}^{3} \mapsto \mathbb{R}^{d_{s}}}\), which maps a 3D
+                point
+                \(\mathbf{x}\) to visual-geometry features \(f_{s}(\mathbf{x})\)
+                alongside a semantic field \({f_{l}: \mathbb{R}^{3} \mapsto \mathbb{R}^{d_{l}}}\)
+                that maps 3D points to the shared image-language embedding space of CLIP.
+                For effective co-supervision of both semantic fields, the VGGT and CLIP semantic fields share the same
+                hashgrid encodings (i.e., base semantics), associating their semantic embeddings with the same visual
+                and geometric features, illustrated in the left side of the figure.
             </p>
         </div>
     </section>
@@ -344,619 +380,841 @@
     <section id="experiments" class="section">
         <div class="container is-max-desktop content-container">
             <h2 class="title is-3 has-text-centered">Experiments</h2>
-            <p class="has-text-centered">
-                We evaluate the geometry-grounding of semantic features on three tasks: (i) semantic content
-                visualization, (ii) semantic localization, and (iii) radiance field inversion.
-            </p>
-        </div>
-
-    <!-- ===== Semantic Content ===== -->
-    <section id="semantic-content" class="section">
-        <div class="container is-max-desktop content-container">
-            <h2 class="title is-4 has-text-centered">Does spatial-
-                grounding produce higher-fidelity geometry-aware semantic features?</h2>
-
-            <br>
-            <img src="./static/images/PCA.png" class="real-exp-img" alt="PCA Evaluation." />
             <p>
+                We examine the performance of visual-geometry semantic features compared to visual-only features in
+                distilled radiance fields.
+                Via extensive experiments on three benchmark datasets (LERF, 3D OVS, and Robotics datasets), we explore
+                the
+                following questions, spanning the core applications of
+                distilled radiance fields in robotics:
             </p>
-
-            <!-- <h5 class="title is-5 task-title">Visualization</h5> -->
-
-            <div style="display: flex; align-items: center; margin: 3rem 0;">
-                <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
-                <img src="static/images/gs_icon.png" alt="NeRF Icon" style="height: 40px; width: auto;">
-                <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
-            </div>
-
-            <h5 class="title is-6 task-title">Semantic Content Visualization</h5>
-            
-            <!-- Scene Selector Dropdown -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                <label class="label" style="margin-bottom: 0;">Select Scene:</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="scene-selector">
-                            <option value="3d_ovs_bed">3D OVS Bed</option>
-                            <option value="lerf_teatime">LERF Teatime</option>
-                            <option value="quadruped_kitchen">Quadruped Kitchen</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-                
-            <!-- Dynamic carousel that changes based on scene selection -->
-            <div id="pca-carousel" class="task-carousel">
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca/3d_ovs_bed/pca_rgb.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca/3d_ovs_bed/pca_rgb.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>RGB</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca/3d_ovs_bed/pca_DINOv2.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca/3d_ovs_bed/pca_DINOv2.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv2</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca/3d_ovs_bed/pca_DINOv3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca/3d_ovs_bed/pca_DINOv3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv3</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca/3d_ovs_bed/pca_VGGT.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca/3d_ovs_bed/pca_VGGT.mp4" type="video/mp4" />
-                    </video>
-                    <p style="text-align: center;"><strong>VGGT</strong></p>
-                </div>
-            </div>
-
-            <h5 class="title is-6 task-title" style="margin-top: 3rem;">Sobel Edge Extraction Visualization</h5>
-
-            <!-- Scene Selector Dropdown for Edge 0.1 -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                <label class="label" style="margin-bottom: 0;">Select Scene for Threshold=0.1:</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="edge-01-scene-selector">
-                            <option value="3d_ovs_bed">3D OVS Bed</option>
-                            <option value="lerf_teatime">LERF Teatime</option>
-                            <option value="quadruped_kitchen">Quadruped Kitchen</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dynamic carousel for Edge 0.1 -->
-            <div id="edge-01-carousel" class="task-carousel">
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_rgb_0.1.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_rgb_0.1.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>RGB</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv2_0.1.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv2_0.1.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv2</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv3_0.1.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv3_0.1.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv3</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_VGGT_0.1.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_VGGT_0.1.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>VGGT</strong></p>
-                </div>
-            </div>
-
-            <!-- <h5 class="title is-6 task-title" style="margin-top: 3rem;">Sobel Edge Extraction Visualization (Threshold: 0.3)</h5> -->
-
-            <!-- Scene Selector Dropdown for Edge 0.3 -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem; margin-top: 1rem">
-                <label class="label" style="margin-bottom: 0;">Select Scene for Threshold=0.3:</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="edge-03-scene-selector">
-                            <option value="3d_ovs_bed">3D OVS Bed</option>
-                            <option value="lerf_teatime">LERF Teatime</option>
-                            <option value="quadruped_kitchen">Quadruped Kitchen</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dynamic carousel for Edge 0.3 -->
-            <div id="edge-03-carousel" class="task-carousel">
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_rgb_0.3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_rgb_0.3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>RGB</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv2_0.3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv2_0.3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv2</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv3_0.3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv3_0.3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv3</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_VGGT_0.3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/pca_sobel_edge/3d_ovs_bed/sobel_edge_VGGT_0.3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>VGGT</strong></p>
-                </div>
-            </div>
-
-            <div style="display: flex; align-items: center; margin: 3rem 0;">
-                <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
-                <img src="static/images/nerf_icon.png" alt="NeRF Icon" style="height: 40px; width: auto;">
-                <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
-            </div>
-
-            <h6 class="title is-6" style="margin-top: 2rem; margin-bottom: 1rem;">Semantic Content Visualization</h6>
-            
-            <!-- Scene Selector Dropdown for NeRF PCA -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                <label class="label" style="margin-bottom: 0;">Select Scene:</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="nerf-scene-selector">
-                            <option value="3d_ovs_bed">3D OVS Bed</option>
-                            <option value="lerf_teatime">LERF Teatime</option>
-                            <option value="quadruped_kitchen">Quadruped Kitchen</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-                
-            <!-- Dynamic carousel for NeRF PCA -->
-            <div id="nerf-pca-carousel" class="task-carousel">
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca/3d_ovs_bed/pca_rgb.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca/3d_ovs_bed/pca_rgb.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>RGB</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca/3d_ovs_bed/pca_DINOv2.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca/3d_ovs_bed/pca_DINOv2.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv2</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca/3d_ovs_bed/pca_DINOv3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca/3d_ovs_bed/pca_DINOv3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv3</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca/3d_ovs_bed/pca_VGGT.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca/3d_ovs_bed/pca_VGGT.mp4" type="video/mp4" />
-                    </video>
-                    <p style="text-align: center;"><strong>VGGT</strong></p>
-                </div>
-            </div>
-
-            <h6 class="title is-6" style="margin-top: 2rem; margin-bottom: 1rem;">Sobel Edge Extraction Visualization</h6>
-
-            <!-- Scene Selector Dropdown for NeRF Edge 0.1 -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                <label class="label" style="margin-bottom: 0;">Select Scene for Threshold=0.1:</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="nerf-edge-01-scene-selector">
-                            <option value="3d_ovs_bed">3D OVS Bed</option>
-                            <option value="lerf_teatime">LERF Teatime</option>
-                            <option value="quadruped_kitchen">Quadruped Kitchen</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dynamic carousel for NeRF Edge 0.1 -->
-            <div id="nerf-edge-01-carousel" class="task-carousel">
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_rgb_0.1.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_rgb_0.1.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>RGB</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv2_0.1.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv2_0.1.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv2</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv3_0.1.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv3_0.1.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv3</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_VGGT_0.1.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_VGGT_0.1.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>VGGT</strong></p>
-                </div>
-            </div>
-
-            <!-- Scene Selector Dropdown for NeRF Edge 0.3 -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem; margin-top: 1rem">
-                <label class="label" style="margin-bottom: 0;">Select Scene for Threshold=0.3:</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="nerf-edge-03-scene-selector">
-                            <option value="3d_ovs_bed">3D OVS Bed</option>
-                            <option value="lerf_teatime">LERF Teatime</option>
-                            <option value="quadruped_kitchen">Quadruped Kitchen</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dynamic carousel for NeRF Edge 0.3 -->
-            <div id="nerf-edge-03-carousel" class="task-carousel">
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_rgb_0.3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_rgb_0.3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>RGB</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv2_0.3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv2_0.3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv2</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv3_0.3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_DINOv3_0.3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv3</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_VGGT_0.3.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/pca_sobel_edge/3d_ovs_bed/sobel_edge_VGGT_0.3.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>VGGT</strong></p>
-                </div>
-            </div>
         </div>
-    </section>
 
-    <!-- ===== Semantic Localization ===== -->
-    <section id="semantic-localization" class="section">
-        <div class="container is-max-desktop content-container">
-            <h2 class="title is-4 has-text-centered">Does geometry-grounding improve semantic object localization?</h2>
-            <br>
-            <img src="./static/images/Segmentation.png" class="real-exp-img" alt="Semantic Localization Evaluation." />
-            <p>
-            </p>
-            
-            
-            <div style="display: flex; align-items: center; margin: 3rem 0;">
-                <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
-                <img src="static/images/gs_icon.png" alt="NeRF Icon" style="height: 40px; width: auto;">
-                <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
-            </div>
+        <!-- ===== Semantic Content ===== -->
+        <section id="semantic-content" class="section">
+            <div class="container is-max-desktop content-container">
+                <h2 class="title is-4 has-text-centered">Does spatial-
+                    grounding produce higher-fidelity geometry-aware semantic features?</h2>
 
-            <!-- Scene Selector Dropdown for Semantic Localization -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                <label class="label" style="margin-bottom: 0;">Select Scene:</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="nerf-segmentation-scene-selector">
-                            <option value="3d_ovs_table">3D OVS Table (shoe)</option>
-                            <option value="3d_ovs_covered_desk">3D OVS Covered Desk (flower)</option>
-                            <option value="drone">Drone (ladder)</option>
-                            <option value="quadruped_office">Quadruped Office (keyboard)</option>
-                            <option value="lerf_ramen">LERF Ramen (ramen)</option>
-                            <option value="lerf_waldo_kitchen">LERF Waldo Kitchen (faucet)</option>
-                        </select>
+                <br>
+                <p>
+                    We use the <em>geometric fidelity factor</em> (GFF) to quantitatively assess the geometric content
+                    of
+                    distilled features,
+                    which captures the edge information present in the semantic features relative to the physical scene,
+                    as determined by the RGB image.
+                    We
+                    apply the Sobel-Feldman filter to the semantic images and extract the edges contained in these
+                    images at
+                    different resolutions, by varying the threshold of the edge gradient.
+                    We aggregate the quantitative results for all scenes and plot the GFF against gradient thresholds.
+                    For GS, we see that VGGT's features have the most edges at lower
+                    gradient thresholds, with DINOv2's features having the least, consistent with our qualitative
+                    observations. Moreover, we observe that the GFF of DINOv2 and DINOv3 remains almost constant across
+                    different thresholds, suggesting a lack of diversity in their geometric content, unlike VGGT.
+
+                    We visualize the
+                    results for the
+                    3D OVS Bed, LERF Teatime, Robotics Quadruped Kitchen scenes with thresholds of 0.1 and 0.3. Even at
+                    the lowest threshold of 0.1, we
+                    observe more
+                    prominent
+                    geometry in the VGGT features in all scenes, except the 3D OVS scene.
+                    Increasing the gradient threshold leads to an overall decrease in the
+                    number
+                    of edges contained in the spatially-grounded and visual-only features. However, VGGT still provides
+                    the most
+                    structural content.
+                </p>
+
+                <br>
+
+                <img src="./static/images/PCA.png" class="real-exp-img" alt="PCA Evaluation." />
+
+                <br>
+                <br>
+
+                <p>
+                    Furthermore, we project the distilled semantic features into a three-dimensional subspace using the
+                    first-three
+                    principal components to aid visualization.
+                    We show the PCA visualization of the semantic features in the same
+                    scenes, highlighting the object-level composition of the scene.
+                    For example, in the Teatime scene, we observe that the DINOv2 and DINOv3 features for the bear and
+                    the sheep
+                    are strongly distinct from the table and chairs, underscoring their focus on object-level
+                    decomposition. In contrast, VGGT features emphasize the geometric details of the scene, evidenced by
+                    the prominent edges of the bear, sheep, table, and chair, although some object-level features are
+                    visible.
+                </p>
+                <!-- <h5 class="title is-5 task-title">Visualization</h5> -->
+
+                <div style="display: flex; align-items: center; margin: 3rem 0;">
+                    <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
+                    <img src="static/images/gs_icon.png" alt="NeRF Icon" style="height: 40px; width: auto;">
+                    <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
+                </div>
+
+                <h5 class="title is-6 task-title">Semantic Content Visualization</h5>
+
+                <!-- Scene Selector Dropdown -->
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <label class="label" style="margin-bottom: 0;">Select Scene:</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="scene-selector">
+                                <option value="lerf_teatime">LERF Teatime</option>
+                                <option value="3d_ovs_bed">3D OVS Bed</option>
+                                <option value="quadruped_kitchen">Quadruped Kitchen</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic carousel that changes based on scene selection -->
+                <div id="pca-carousel" class="task-carousel">
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca/lerf_teatime/pca_rgb.jpg" preload="metadata">
+                            <source src="static/videos/experiments/gs/pca/lerf_teatime/pca_rgb.mp4" type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>RGB</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca/lerf_teatime/pca_DINOv2.jpg"
+                            preload="metadata">
+                            <source src="static/videos/experiments/gs/pca/lerf_teatime/pca_DINOv2.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv2</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca/lerf_teatime/pca_DINOv3.jpg"
+                            preload="metadata">
+                            <source src="static/videos/experiments/gs/pca/lerf_teatime/pca_DINOv3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv3</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca/lerf_teatime/pca_VGGT.jpg" preload="metadata">
+                            <source src="static/videos/experiments/gs/pca/lerf_teatime/pca_VGGT.mp4" type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>VGGT</strong></p>
+                    </div>
+                </div>
+
+                <h5 class="title is-6 task-title" style="margin-top: 3rem;">Sobel Edge Extraction Visualization</h5>
+
+                <!-- Scene Selector Dropdown for Edge 0.1 -->
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <label class="label" style="margin-bottom: 0;">Select Scene for Threshold=0.1:</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="edge-01-scene-selector">
+                                <option value="lerf_teatime">LERF Teatime</option>
+                                <option value="3d_ovs_bed">3D OVS Bed</option>
+                                <option value="quadruped_kitchen">Quadruped Kitchen</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic carousel for Edge 0.1 -->
+                <div id="edge-01-carousel" class="task-carousel">
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_rgb_0.1.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_rgb_0.1.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>RGB</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv2_0.1.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv2_0.1.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv2</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv3_0.1.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv3_0.1.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv3</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_VGGT_0.1.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_VGGT_0.1.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>VGGT</strong></p>
+                    </div>
+                </div>
+
+                <!-- <h5 class="title is-6 task-title" style="margin-top: 3rem;">Sobel Edge Extraction Visualization (Threshold: 0.3)</h5> -->
+
+                <!-- Scene Selector Dropdown for Edge 0.3 -->
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem; margin-top: 1rem">
+                    <label class="label" style="margin-bottom: 0;">Select Scene for Threshold=0.3:</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="edge-03-scene-selector">
+                                <option value="lerf_teatime">LERF Teatime</option>
+                                <option value="3d_ovs_bed">3D OVS Bed</option>
+                                <option value="quadruped_kitchen">Quadruped Kitchen</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic carousel for Edge 0.3 -->
+                <div id="edge-03-carousel" class="task-carousel">
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_rgb_0.3.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_rgb_0.3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>RGB</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv2_0.3.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv2_0.3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv2</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv3_0.3.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv3_0.3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv3</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_VGGT_0.3.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/pca_sobel_edge/lerf_teatime/sobel_edge_VGGT_0.3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>VGGT</strong></p>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; margin: 3rem 0;">
+                    <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
+                    <img src="static/images/nerf_icon.png" alt="NeRF Icon" style="height: 40px; width: auto;">
+                    <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
+                </div>
+
+                <h6 class="title is-6" style="margin-top: 2rem; margin-bottom: 1rem;">Semantic Content Visualization
+                </h6>
+
+                <!-- Scene Selector Dropdown for NeRF PCA -->
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <label class="label" style="margin-bottom: 0;">Select Scene:</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="nerf-scene-selector">
+                                <option value="lerf_teatime">LERF Teatime</option>
+                                <option value="3d_ovs_bed">3D OVS Bed</option>
+                                <option value="quadruped_kitchen">Quadruped Kitchen</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic carousel for NeRF PCA -->
+                <div id="nerf-pca-carousel" class="task-carousel">
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca/lerf_teatime/pca_rgb.jpg" preload="metadata">
+                            <source src="static/videos/experiments/nerf/pca/lerf_teatime/pca_rgb.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>RGB</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca/lerf_teatime/pca_DINOv2.jpg"
+                            preload="metadata">
+                            <source src="static/videos/experiments/nerf/pca/lerf_teatime/pca_DINOv2.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv2</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca/lerf_teatime/pca_DINOv3.jpg"
+                            preload="metadata">
+                            <source src="static/videos/experiments/nerf/pca/lerf_teatime/pca_DINOv3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv3</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca/lerf_teatime/pca_VGGT.jpg"
+                            preload="metadata">
+                            <source src="static/videos/experiments/nerf/pca/lerf_teatime/pca_VGGT.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>VGGT</strong></p>
+                    </div>
+                </div>
+
+                <h6 class="title is-6" style="margin-top: 2rem; margin-bottom: 1rem;">Sobel Edge Extraction
+                    Visualization</h6>
+
+                <!-- Scene Selector Dropdown for NeRF Edge 0.1 -->
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <label class="label" style="margin-bottom: 0;">Select Scene for Threshold=0.1:</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="nerf-edge-01-scene-selector">
+                                <option value="lerf_teatime">LERF Teatime</option>
+                                <option value="3d_ovs_bed">3D OVS Bed</option>
+                                <option value="quadruped_kitchen">Quadruped Kitchen</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic carousel for NeRF Edge 0.1 -->
+                <div id="nerf-edge-01-carousel" class="task-carousel">
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_rgb_0.1.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_rgb_0.1.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>RGB</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv2_0.1.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv2_0.1.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv2</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv3_0.1.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv3_0.1.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv3</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_VGGT_0.1.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_VGGT_0.1.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>VGGT</strong></p>
+                    </div>
+                </div>
+
+                <!-- Scene Selector Dropdown for NeRF Edge 0.3 -->
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem; margin-top: 1rem">
+                    <label class="label" style="margin-bottom: 0;">Select Scene for Threshold=0.3:</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="nerf-edge-03-scene-selector">
+                                <option value="lerf_teatime">LERF Teatime</option>
+                                <option value="3d_ovs_bed">3D OVS Bed</option>
+                                <option value="quadruped_kitchen">Quadruped Kitchen</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic carousel for NeRF Edge 0.3 -->
+                <div id="nerf-edge-03-carousel" class="task-carousel">
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_rgb_0.3.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_rgb_0.3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>RGB</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv2_0.3.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv2_0.3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv2</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv3_0.3.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_DINOv3_0.3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv3</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_VGGT_0.3.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/pca_sobel_edge/lerf_teatime/sobel_edge_VGGT_0.3.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>VGGT</strong></p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Dynamic carousel for Semantic Localization -->
-            <div id="segmentation-carousel" class="task-carousel">
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv2_shoe.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv2_shoe.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv2</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv3_shoe.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv3_shoe.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv3</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_VGGT_shoe.jpg" preload="metadata">
-                        <source src="static/videos/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_VGGT_shoe.mp4" type="video/mp4" />
-                    </video>
-                    <p style="text-align: center;"><strong>VGGT</strong></p>
-                </div>
-            </div>
+        <!-- ===== Semantic Localization ===== -->
+        <section id="semantic-localization" class="section">
+            <div class="container is-max-desktop content-container">
+                <h2 class="title is-4 has-text-centered">Does geometry-grounding improve semantic object localization?
+                </h2>
+                <br>
 
-            <div style="display: flex; align-items: center; margin: 3rem 0;">
-                <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
-                <img src="static/images/nerf_icon.png" alt="NeRF Icon" style="height: 40px; width: auto;">
-                <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
-            </div>
+                <p>
+                    We examine the performance of spatially-grounded vs. visual-only features in semantic object
+                    localization. In each scene, we use
+                    CLIP to encode the natural-language queries and subsequently generate the continuous relevancy mask.
+                    We use GroundingDINO and SAM-2 to annotate the
+                    ground-truth segmentation mask, used in computing the segmentation accuracy metrics: SSIM, PSNR, and
+                    LPIPS.
 
-            <!-- Scene Selector Dropdown for NeRF Semantic Localization -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                <label class="label" style="margin-bottom: 0;">Select Scene:</label>
-                <div class="control">
-                    <div class="select">
-                        <select id="segmentation-scene-selector">
-                            <option value="3d_ovs_table">3D OVS Table (mug)</option>
-                            <option value="3d_ovs_covered_desk">3D OVS Covered Desk (teddy)</option>
-                            <option value="drone">Drone (beachball)</option>
-                            <option value="quadruped_office">Quadruped Office (printer)</option>
-                            <option value="lerf_ramen">LERF Ramen (egg)</option>
-                            <option value="lerf_waldo_kitchen">LERF Waldo Kitchen (fridge)</option>
-                        </select>
+                    After aggregating the results across all scenes, we find no significant difference in the
+                    localization accuracy of visual-only vs. visual-geometry
+                    features across GS and NeRF, suggesting that both semantic features are effective in co-supervising
+                    CLIP for open-vocabulary localization. However, we observe marginal degradation in performance with
+                    geometry-grounded features (VGGT).
+                    In addition, we visualize the ground-truth RGB and segmentation mask and the relevancy masks in
+                    six scenes.
+                </p>
+
+                <br>
+
+                <img src="./static/images/Segmentation.png" class="real-exp-img"
+                    alt="Semantic Localization Evaluation." />
+
+
+                <div style="display: flex; align-items: center; margin: 3rem 0;">
+                    <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
+                    <img src="static/images/gs_icon.png" alt="NeRF Icon" style="height: 40px; width: auto;">
+                    <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
+                </div>
+
+                <!-- Scene Selector Dropdown for Semantic Localization -->
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <label class="label" style="margin-bottom: 0;">Select Scene:</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="segmentation-scene-selector">
+                                <option value="3d_ovs_table">3D OVS Table (shoe)</option>
+                                <option value="3d_ovs_covered_desk">3D OVS Covered Desk (flower)</option>
+                                <option value="drone">Drone (ladder)</option>
+                                <option value="quadruped_office">Quadruped Office (keyboard)</option>
+                                <option value="lerf_ramen">LERF Ramen (ramen)</option>
+                                <option value="lerf_waldo_kitchen">LERF Waldo Kitchen (faucet)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic carousel for Semantic Localization -->
+                <div id="segmentation-carousel" class="task-carousel">
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv2_shoe.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv2_shoe.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv2</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv3_shoe.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv3_shoe.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv3</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_VGGT_shoe.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/gs/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_VGGT_shoe.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>VGGT</strong></p>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; margin: 3rem 0;">
+                    <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
+                    <img src="static/images/nerf_icon.png" alt="NeRF Icon" style="height: 40px; width: auto;">
+                    <hr style="flex: 1; border: none; border-top: 2px solid #ccc; margin: 0 1rem;">
+                </div>
+
+                <!-- Scene Selector Dropdown for NeRF Semantic Localization -->
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <label class="label" style="margin-bottom: 0;">Select Scene:</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="nerf-segmentation-scene-selector">
+                                <option value="3d_ovs_table">3D OVS Table (mug)</option>
+                                <option value="drone">Drone (beachball)</option>
+                                <option value="quadruped_office">Quadruped Office (printer)</option>
+                                <option value="lerf_ramen">LERF Ramen (egg)</option>
+                                <option value="lerf_waldo_kitchen">LERF Waldo Kitchen (fridge)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic carousel for NeRF Semantic Localization -->
+                <div id="nerf-segmentation-carousel" class="task-carousel">
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv2_mug.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv2_mug.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv2</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv3_mug.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv3_mug.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>DINOv3</strong></p>
+                    </div>
+                    <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                        <video controls controls onloadstart="this.playbackRate = 1.0;" autoplay loop muted playsinline
+                            poster="static/thumbnails/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_VGGT_mug.jpg"
+                            preload="metadata">
+                            <source
+                                src="static/videos/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_VGGT_mug.mp4"
+                                type="video/mp4" />
+                        </video>
+                        <p style="text-align: center;"><strong>VGGT</strong></p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Dynamic carousel for NeRF Semantic Localization -->
-            <div id="nerf-segmentation-carousel" class="task-carousel">
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv2_mug.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv2_mug.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv2</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv3_mug.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_DINOv3_mug.mp4" type="video/mp4" /></video>
-                    <p style="text-align: center;"><strong>DINOv3</strong></p>
-                </div>
-                <div class="video-thumb"><video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
-                        autoplay loop muted playsinline
-                        poster="static/thumbnails/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_VGGT_mug.jpg" preload="metadata">
-                        <source src="static/videos/experiments/nerf/segmentation/3d_ovs_table/semantic_segmentation_pred_sim_VGGT_mug.mp4" type="video/mp4" />
-                    </video>
-                    <p style="text-align: center;"><strong>VGGT</strong></p>
-                </div>
+        <!-- ===== RF inversion ===== -->
+        <section id="rf-inversion" class="section">
+            <div class="container is-max-desktop content-container">
+                <h2 class="title is-4 has-text-centered">Does geometry-grounding enable higher-accuracy radiance field
+                    inversion?</h2>
+                <br>
+
+                <p>
+                    We evaluate the accuracy of visual-only and spatially-grounded features in radiance field inversion.
+                    Surprisingly, we find that visual-geometry features underperform visual-only features.
+                    Specifically, in the coarse pose estimation phase which significantly relies on semantics, DINOv2
+                    achieves the lowest rotation and translation errors, while VGGT computes the least accurate pose
+                    estimates.
+                    These results suggest that DINOv2 features might be better suited for coarse pose estimation
+                    compared to VGGT features, despite the geometry-grounding procedure. Consequently, our findings
+                    indicate that existing methods for geometry-grounding may degrade the versatility of semantic
+                    features as general-purpose image features, constituting an interesting area for future work.
+                </p>
+
+                <br>
+
+                <img src="./static/images/RF_Inversion_comparison.png" class="real-exp-img"
+                    alt="RF Inversion Evaluation." />
+
+                <br>
+                <br>
+
+                <p>
+
+                    Further, we compare SPINE to existing baseline methods for radiance field inversion.
+                    Particularly, we compare DINOv2-based SPINE with
+                    <a href="https://arxiv.org/abs/2403.02751" class="external-link"><span>Splat-Nav</span></a>
+                    and
+                    <a href="https://arxiv.org/abs/2012.05877" class="external-link"><span>iNeRF</span></a>
+                    for pose estimation in GS and NeRFs, respectively. Since the baselines require an initial guess, we
+                    assess the performance of the baselines across two initialization domains, defined by the magnitude
+                    of the initial rotation and translation error, \(R_{\mathrm{err}}\) and \(T_{\mathrm{err}}\),
+                    respectively:
+                    (ii) low initial error with \({R_{\mathrm{err}} = 30\deg}\), \({T_{\mathrm{err}} = 0.5\mathrm{m}}\),
+                    and
+                    (iii) medium initial error with \({R_{\mathrm{err}} = 100\deg}\), \({T_{\mathrm{err}} =
+                    1\mathrm{m}}\).
+                    We
+                    reiterate that SPINE does not utilize any initial guess.
+
+                    <br />
+                    <br />
+
+                    Our results highlight that the baselines struggle without a
+                    good initial guess. Unlike these methods, SPINE computes more accurate pose estimates using
+                    semantics in the coarse phase, without any initial guess. Moreover, via photometric optimization,
+                    SPINE improves the accuracy of the coarse estimates. However, we note that the success of fine
+                    inversion depends on the relative error magnitude of the coarse pose estimates. Particularly, DINOv2
+                    generally achieves the highest success rate in the fine pose estimation phase, primarily due to its
+                    higher-accuracy coarse pose estimates. Here, we show the unweighted mean and standard deviation
+                    of the errors of the fine pose estimates.
+                </p>
             </div>
-        </div>
-    </section>
-
-    <!-- ===== RF inversion ===== -->
-    <section id="rf-inversion" class="section">
-        <div class="container is-max-desktop content-container">
-            <h2 class="title is-4 has-text-centered">Does geometry-grounding enable higher-accuracy radiance field
-                inversion?</h2>
-            <br>
-            <img src="./static/images/RF_Inversion_comparison.png" class="real-exp-img" alt="RF Inversion Evaluation." />
-            <p>
-
-            </p>
-                        
-        </div>
-    </section>
+        </section>
 
 
 
-    <section class="section" id="BibTeX">
-        <div class="container is-max-desktop content">
-            <h2 class="title">BibTeX</h2>
-            <pre><code>@misc{na,
+        <!-- <section class="section" id="BibTeX">
+            <div class="container is-max-desktop content">
+                <h2 class="title">BibTeX</h2>
+                <pre><code>@misc{na,
 }
         </code></pre>
-        </div>
-    </section>
+            </div>
+        </section> -->
 
 
-    <br>
-    <center class="is-size-10">
-        The website design was adapted from <a href="https://nerfies.github.io" class="external-link"><span
-                class="dnerf">Nerfies</span></a>.
-    </center>
-    <br>
+        <br>
+        <center class="is-size-10">
+            The website design was adapted from <a href="https://nerfies.github.io" class="external-link"><span
+                    class="dnerf">Nerfies</span></a>.
+        </center>
+        <br>
 
-    <!-- ===== SCRIPTS ===== -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-    <script>
-        $(function () {
-            // Scene data for PCA visualization
-            const sceneData = {
-                '3d_ovs_bed': {
-                    name: '3D OVS Bed',
-                    videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                },
-                'lerf_teatime': {
-                    name: 'LERF Teatime',
-                    videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                },
-                'quadruped_kitchen': {
-                    name: 'Quadruped Kitchen',
-                    videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                }
-            };
+        <!-- ===== SCRIPTS ===== -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+        <script>
+            $(function () {
+                // Scene data for PCA visualization
+                const sceneData = {
+                    '3d_ovs_bed': {
+                        name: '3D OVS Bed',
+                        videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'lerf_teatime': {
+                        name: 'LERF Teatime',
+                        videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'quadruped_kitchen': {
+                        name: 'Quadruped Kitchen',
+                        videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    }
+                };
 
-            // Scene data for Edge visualization (0.1 and 0.3 thresholds)
-            const edgeSceneData = {
-                '3d_ovs_bed': {
-                    name: '3D OVS Bed',
-                    videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                },
-                'lerf_teatime': {
-                    name: 'LERF Teatime',
-                    videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                },
-                'quadruped_kitchen': {
-                    name: 'Quadruped Kitchen',
-                    videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                }
-            };
+                // Scene data for Edge visualization (0.1 and 0.3 thresholds)
+                const edgeSceneData = {
+                    '3d_ovs_bed': {
+                        name: '3D OVS Bed',
+                        videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'lerf_teatime': {
+                        name: 'LERF Teatime',
+                        videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'quadruped_kitchen': {
+                        name: 'Quadruped Kitchen',
+                        videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    }
+                };
 
-            // Scene data for NeRF PCA visualization (same structure as GS)
-            const nerfSceneData = {
-                '3d_ovs_bed': {
-                    name: '3D OVS Bed',
-                    videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                },
-                'lerf_teatime': {
-                    name: 'LERF Teatime',
-                    videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                },
-                'quadruped_kitchen': {
-                    name: 'Quadruped Kitchen',
-                    videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                }
-            };
+                // Scene data for NeRF PCA visualization (same structure as GS)
+                const nerfSceneData = {
+                    '3d_ovs_bed': {
+                        name: '3D OVS Bed',
+                        videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'lerf_teatime': {
+                        name: 'LERF Teatime',
+                        videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'quadruped_kitchen': {
+                        name: 'Quadruped Kitchen',
+                        videos: ['pca_rgb', 'pca_DINOv2', 'pca_DINOv3', 'pca_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    }
+                };
 
-            // Scene data for NeRF Edge visualization (same structure as GS)
-            const nerfEdgeSceneData = {
-                '3d_ovs_bed': {
-                    name: '3D OVS Bed',
-                    videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                },
-                'lerf_teatime': {
-                    name: 'LERF Teatime',
-                    videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                },
-                'quadruped_kitchen': {
-                    name: 'Quadruped Kitchen',
-                    videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
-                    labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
-                }
-            };
+                // Scene data for NeRF Edge visualization (same structure as GS)
+                const nerfEdgeSceneData = {
+                    '3d_ovs_bed': {
+                        name: '3D OVS Bed',
+                        videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'lerf_teatime': {
+                        name: 'LERF Teatime',
+                        videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'quadruped_kitchen': {
+                        name: 'Quadruped Kitchen',
+                        videos: ['sobel_edge_rgb', 'sobel_edge_DINOv2', 'sobel_edge_DINOv3', 'sobel_edge_VGGT'],
+                        labels: ['RGB', 'DINOv2', 'DINOv3', 'VGGT']
+                    }
+                };
 
-            // Scene data for Semantic Localization
-            const segmentationSceneData = {
-                '3d_ovs_table': {
-                    name: '3D OVS Table',
-                    searchTerm: 'shoe',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                '3d_ovs_covered_desk': {
-                    name: '3D OVS Covered Desk',
-                    searchTerm: 'flower',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                'drone': {
-                    name: 'Drone',
-                    searchTerm: 'ladder',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                'quadruped_office': {
-                    name: 'Quadruped Office',
-                    searchTerm: 'keyboard',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                'lerf_ramen': {
-                    name: 'LERF Ramen',
-                    searchTerm: 'ramen',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                'lerf_waldo_kitchen': {
-                    name: 'LERF Waldo Kitchen',
-                    searchTerm: 'faucet',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                }
-            };
+                // Scene data for Semantic Localization
+                const segmentationSceneData = {
+                    '3d_ovs_table': {
+                        name: '3D OVS Table',
+                        searchTerm: 'shoe',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    '3d_ovs_covered_desk': {
+                        name: '3D OVS Covered Desk',
+                        searchTerm: 'flower',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'drone': {
+                        name: 'Drone',
+                        searchTerm: 'ladder',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'quadruped_office': {
+                        name: 'Quadruped Office',
+                        searchTerm: 'keyboard',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'lerf_ramen': {
+                        name: 'LERF Ramen',
+                        searchTerm: 'ramen',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'lerf_waldo_kitchen': {
+                        name: 'LERF Waldo Kitchen',
+                        searchTerm: 'faucet',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    }
+                };
 
-            // Scene data for NeRF Semantic Localization
-            const nerfSegmentationSceneData = {
-                '3d_ovs_table': {
-                    name: '3D OVS Table',
-                    searchTerm: 'mug',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                '3d_ovs_covered_desk': {
-                    name: '3D OVS Covered Desk',
-                    searchTerm: 'teddy',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                'drone': {
-                    name: 'Drone',
-                    searchTerm: 'beachball',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                'quadruped_office': {
-                    name: 'Quadruped Office',
-                    searchTerm: 'printer',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                'lerf_ramen': {
-                    name: 'LERF Ramen',
-                    searchTerm: 'egg',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                },
-                'lerf_waldo_kitchen': {
-                    name: 'LERF Waldo Kitchen',
-                    searchTerm: 'fridge',
-                    videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
-                    labels: ['DINOv2', 'DINOv3', 'VGGT']
-                }
-            };
+                // Scene data for NeRF Semantic Localization
+                const nerfSegmentationSceneData = {
+                    '3d_ovs_table': {
+                        name: '3D OVS Table',
+                        searchTerm: 'mug',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'drone': {
+                        name: 'Drone',
+                        searchTerm: 'beachball',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'quadruped_office': {
+                        name: 'Quadruped Office',
+                        searchTerm: 'printer',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'lerf_ramen': {
+                        name: 'LERF Ramen',
+                        searchTerm: 'egg',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    },
+                    'lerf_waldo_kitchen': {
+                        name: 'LERF Waldo Kitchen',
+                        searchTerm: 'fridge',
+                        videos: ['semantic_segmentation_pred_sim_DINOv2', 'semantic_segmentation_pred_sim_DINOv3', 'semantic_segmentation_pred_sim_VGGT'],
+                        labels: ['DINOv2', 'DINOv3', 'VGGT']
+                    }
+                };
 
-            // Function to update PCA carousel based on selected scene
-            function updatePCACarousel(sceneKey) {
-                const scene = sceneData[sceneKey];
-                const carousel = $('#pca-carousel');
-                
-                // Destroy existing slick carousel
-                if (carousel.hasClass('slick-initialized')) {
-                    carousel.slick('unslick');
-                }
-                
-                // Clear existing content
-                carousel.empty();
-                
-                // Add new video slides
-                scene.videos.forEach((video, index) => {
-                    const slide = `
-                        <div class="video-thumb">
-                            <video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
+                // Function to update PCA carousel based on selected scene
+                function updatePCACarousel(sceneKey) {
+                    const scene = sceneData[sceneKey];
+                    const carousel = $('#pca-carousel');
+
+                    // Destroy existing slick carousel
+                    if (carousel.hasClass('slick-initialized')) {
+                        carousel.slick('unslick');
+                    }
+
+                    // Clear existing content
+                    carousel.empty();
+
+                    // Add new video slides
+                    scene.videos.forEach((video, index) => {
+                        const slide = `
+                        <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                            <video controls controls onloadstart="this.playbackRate = 1.0;"
                                 autoplay loop muted playsinline
                                 poster="static/thumbnails/experiments/gs/pca/${sceneKey}/${video}.jpg" preload="metadata">
                                 <source src="static/videos/experiments/gs/pca/${sceneKey}/${video}.mp4" type="video/mp4" />
@@ -964,44 +1222,44 @@
                             <p style="text-align: center;"><strong>${scene.labels[index]}</strong></p>
                         </div>
                     `;
-                    carousel.append(slide);
-                });
-                
-                // Reinitialize slick carousel
-                carousel.slick({
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                    infinite: false,
-                    arrows: true,
-                    dots: false,
-                    lazyLoad: 'ondemand',
-                    touchMove: true,
-                    responsive: [
-                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                        { breakpoint: 768, settings: { slidesToShow: 2 } },
-                        { breakpoint: 480, settings: { slidesToShow: 1 } }
-                    ]
-                });
-            }
+                        carousel.append(slide);
+                    });
 
-            // Function to update Edge carousel based on selected scene and threshold
-            function updateEdgeCarousel(sceneKey, threshold, carouselId) {
-                const scene = edgeSceneData[sceneKey];
-                const carousel = $(carouselId);
-                
-                // Destroy existing slick carousel
-                if (carousel.hasClass('slick-initialized')) {
-                    carousel.slick('unslick');
+                    // Reinitialize slick carousel
+                    carousel.slick({
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        arrows: true,
+                        dots: false,
+                        lazyLoad: 'ondemand',
+                        touchMove: true,
+                        responsive: [
+                            { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                            { breakpoint: 768, settings: { slidesToShow: 2 } },
+                            { breakpoint: 480, settings: { slidesToShow: 1 } }
+                        ]
+                    });
                 }
-                
-                // Clear existing content
-                carousel.empty();
-                
-                // Add new video slides
-                scene.videos.forEach((video, index) => {
-                    const slide = `
-                        <div class="video-thumb">
-                            <video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
+
+                // Function to update Edge carousel based on selected scene and threshold
+                function updateEdgeCarousel(sceneKey, threshold, carouselId) {
+                    const scene = edgeSceneData[sceneKey];
+                    const carousel = $(carouselId);
+
+                    // Destroy existing slick carousel
+                    if (carousel.hasClass('slick-initialized')) {
+                        carousel.slick('unslick');
+                    }
+
+                    // Clear existing content
+                    carousel.empty();
+
+                    // Add new video slides
+                    scene.videos.forEach((video, index) => {
+                        const slide = `
+                        <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                            <video controls controls onloadstart="this.playbackRate = 1.0;"
                                 autoplay loop muted playsinline
                                 poster="static/thumbnails/experiments/gs/pca_sobel_edge/${sceneKey}/${video}_${threshold}.jpg" preload="metadata">
                                 <source src="static/videos/experiments/gs/pca_sobel_edge/${sceneKey}/${video}_${threshold}.mp4" type="video/mp4" />
@@ -1009,44 +1267,44 @@
                             <p style="text-align: center;"><strong>${scene.labels[index]}</strong></p>
                         </div>
                     `;
-                    carousel.append(slide);
-                });
-                
-                // Reinitialize slick carousel
-                carousel.slick({
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                    infinite: false,
-                    arrows: true,
-                    dots: false,
-                    lazyLoad: 'ondemand',
-                    touchMove: true,
-                    responsive: [
-                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                        { breakpoint: 768, settings: { slidesToShow: 2 } },
-                        { breakpoint: 480, settings: { slidesToShow: 1 } }
-                    ]
-                });
-            }
+                        carousel.append(slide);
+                    });
 
-            // Function to update NeRF PCA carousel based on selected scene
-            function updateNerfPCACarousel(sceneKey) {
-                const scene = nerfSceneData[sceneKey];
-                const carousel = $('#nerf-pca-carousel');
-                
-                // Destroy existing slick carousel
-                if (carousel.hasClass('slick-initialized')) {
-                    carousel.slick('unslick');
+                    // Reinitialize slick carousel
+                    carousel.slick({
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        arrows: true,
+                        dots: false,
+                        lazyLoad: 'ondemand',
+                        touchMove: true,
+                        responsive: [
+                            { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                            { breakpoint: 768, settings: { slidesToShow: 2 } },
+                            { breakpoint: 480, settings: { slidesToShow: 1 } }
+                        ]
+                    });
                 }
-                
-                // Clear existing content
-                carousel.empty();
-                
-                // Add new video slides
-                scene.videos.forEach((video, index) => {
-                    const slide = `
-                        <div class="video-thumb">
-                            <video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
+
+                // Function to update NeRF PCA carousel based on selected scene
+                function updateNerfPCACarousel(sceneKey) {
+                    const scene = nerfSceneData[sceneKey];
+                    const carousel = $('#nerf-pca-carousel');
+
+                    // Destroy existing slick carousel
+                    if (carousel.hasClass('slick-initialized')) {
+                        carousel.slick('unslick');
+                    }
+
+                    // Clear existing content
+                    carousel.empty();
+
+                    // Add new video slides
+                    scene.videos.forEach((video, index) => {
+                        const slide = `
+                        <div class="thumb-video" style="flex: 0 0 40%; text-align: center; margin: 0 1rem;">
+                            <video controls controls onloadstart="this.playbackRate = 1.0;"
                                 autoplay loop muted playsinline
                                 poster="static/thumbnails/experiments/nerf/pca/${sceneKey}/${video}.jpg" preload="metadata">
                                 <source src="static/videos/experiments/nerf/pca/${sceneKey}/${video}.mp4" type="video/mp4" />
@@ -1054,44 +1312,44 @@
                             <p style="text-align: center;"><strong>${scene.labels[index]}</strong></p>
                         </div>
                     `;
-                    carousel.append(slide);
-                });
-                
-                // Reinitialize slick carousel
-                carousel.slick({
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                    infinite: false,
-                    arrows: true,
-                    dots: false,
-                    lazyLoad: 'ondemand',
-                    touchMove: true,
-                    responsive: [
-                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                        { breakpoint: 768, settings: { slidesToShow: 2 } },
-                        { breakpoint: 480, settings: { slidesToShow: 1 } }
-                    ]
-                });
-            }
+                        carousel.append(slide);
+                    });
 
-            // Function to update NeRF Edge carousel based on selected scene and threshold
-            function updateNerfEdgeCarousel(sceneKey, threshold, carouselId) {
-                const scene = nerfEdgeSceneData[sceneKey];
-                const carousel = $(carouselId);
-                
-                // Destroy existing slick carousel
-                if (carousel.hasClass('slick-initialized')) {
-                    carousel.slick('unslick');
+                    // Reinitialize slick carousel
+                    carousel.slick({
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        arrows: true,
+                        dots: false,
+                        lazyLoad: 'ondemand',
+                        touchMove: true,
+                        responsive: [
+                            { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                            { breakpoint: 768, settings: { slidesToShow: 2 } },
+                            { breakpoint: 480, settings: { slidesToShow: 1 } }
+                        ]
+                    });
                 }
-                
-                // Clear existing content
-                carousel.empty();
-                
-                // Add new video slides
-                scene.videos.forEach((video, index) => {
-                    const slide = `
-                        <div class="video-thumb">
-                            <video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
+
+                // Function to update NeRF Edge carousel based on selected scene and threshold
+                function updateNerfEdgeCarousel(sceneKey, threshold, carouselId) {
+                    const scene = nerfEdgeSceneData[sceneKey];
+                    const carousel = $(carouselId);
+
+                    // Destroy existing slick carousel
+                    if (carousel.hasClass('slick-initialized')) {
+                        carousel.slick('unslick');
+                    }
+
+                    // Clear existing content
+                    carousel.empty();
+
+                    // Add new video slides
+                    scene.videos.forEach((video, index) => {
+                        const slide = `
+                        <div class="thumb-video" style="flex: 0 0 30%; text-align: center; margin: 0 1rem;">
+                            <video controls controls onloadstart="this.playbackRate = 1.0;"
                                 autoplay loop muted playsinline
                                 poster="static/thumbnails/experiments/nerf/pca_sobel_edge/${sceneKey}/${video}_${threshold}.jpg" preload="metadata">
                                 <source src="static/videos/experiments/nerf/pca_sobel_edge/${sceneKey}/${video}_${threshold}.mp4" type="video/mp4" />
@@ -1099,45 +1357,45 @@
                             <p style="text-align: center;"><strong>${scene.labels[index]}</strong></p>
                         </div>
                     `;
-                    carousel.append(slide);
-                });
-                
-                // Reinitialize slick carousel
-                carousel.slick({
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                    infinite: false,
-                    arrows: true,
-                    dots: false,
-                    lazyLoad: 'ondemand',
-                    touchMove: true,
-                    responsive: [
-                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                        { breakpoint: 768, settings: { slidesToShow: 2 } },
-                        { breakpoint: 480, settings: { slidesToShow: 1 } }
-                    ]
-                });
-            }
+                        carousel.append(slide);
+                    });
 
-            // Function to update Segmentation carousel based on selected scene
-            function updateSegmentationCarousel(sceneKey) {
-                const scene = segmentationSceneData[sceneKey];
-                const carousel = $('#segmentation-carousel');
-                
-                // Destroy existing slick carousel
-                if (carousel.hasClass('slick-initialized')) {
-                    carousel.slick('unslick');
+                    // Reinitialize slick carousel
+                    carousel.slick({
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        arrows: true,
+                        dots: false,
+                        lazyLoad: 'ondemand',
+                        touchMove: true,
+                        responsive: [
+                            { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                            { breakpoint: 768, settings: { slidesToShow: 2 } },
+                            { breakpoint: 480, settings: { slidesToShow: 1 } }
+                        ]
+                    });
                 }
-                
-                // Clear existing content
-                carousel.empty();
-                
-                // Update search term display
-                $('#segmentation-search-term').text(scene.searchTerm);
-                
-                // Add new video slides
-                scene.videos.forEach((video, index) => {
-                    const slide = `
+
+                // Function to update Segmentation carousel based on selected scene
+                function updateSegmentationCarousel(sceneKey) {
+                    const scene = segmentationSceneData[sceneKey];
+                    const carousel = $('#segmentation-carousel');
+
+                    // Destroy existing slick carousel
+                    if (carousel.hasClass('slick-initialized')) {
+                        carousel.slick('unslick');
+                    }
+
+                    // Clear existing content
+                    carousel.empty();
+
+                    // Update search term display
+                    $('#segmentation-search-term').text(scene.searchTerm);
+
+                    // Add new video slides
+                    scene.videos.forEach((video, index) => {
+                        const slide = `
                         <div class="video-thumb">
                             <video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
                                 autoplay loop muted playsinline
@@ -1147,44 +1405,44 @@
                             <p style="text-align: center;"><strong>${scene.labels[index]}</strong></p>
                         </div>
                     `;
-                    carousel.append(slide);
-                });
-                
-                // Reinitialize slick carousel
-                carousel.slick({
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: false,
-                    arrows: true,
-                    dots: false,
-                    lazyLoad: 'ondemand',
-                    touchMove: true,
-                    responsive: [
-                        { breakpoint: 1024, settings: { slidesToShow: 2 } },
-                        { breakpoint: 768, settings: { slidesToShow: 1 } }
-                    ]
-                });
-            }
+                        carousel.append(slide);
+                    });
 
-            // Function to update NeRF Segmentation carousel based on selected scene
-            function updateNerfSegmentationCarousel(sceneKey) {
-                const scene = nerfSegmentationSceneData[sceneKey];
-                const carousel = $('#nerf-segmentation-carousel');
-                
-                // Destroy existing slick carousel
-                if (carousel.hasClass('slick-initialized')) {
-                    carousel.slick('unslick');
+                    // Reinitialize slick carousel
+                    carousel.slick({
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        arrows: true,
+                        dots: false,
+                        lazyLoad: 'ondemand',
+                        touchMove: true,
+                        responsive: [
+                            { breakpoint: 1024, settings: { slidesToShow: 2 } },
+                            { breakpoint: 768, settings: { slidesToShow: 1 } }
+                        ]
+                    });
                 }
-                
-                // Clear existing content
-                carousel.empty();
-                
-                // Update search term display (if needed)
-                $('#nerf-segmentation-search-term').text(scene.searchTerm);
-                
-                // Add new video slides
-                scene.videos.forEach((video, index) => {
-                    const slide = `
+
+                // Function to update NeRF Segmentation carousel based on selected scene
+                function updateNerfSegmentationCarousel(sceneKey) {
+                    const scene = nerfSegmentationSceneData[sceneKey];
+                    const carousel = $('#nerf-segmentation-carousel');
+
+                    // Destroy existing slick carousel
+                    if (carousel.hasClass('slick-initialized')) {
+                        carousel.slick('unslick');
+                    }
+
+                    // Clear existing content
+                    carousel.empty();
+
+                    // Update search term display (if needed)
+                    $('#nerf-segmentation-search-term').text(scene.searchTerm);
+
+                    // Add new video slides
+                    scene.videos.forEach((video, index) => {
+                        const slide = `
                         <div class="video-thumb">
                             <video class="thumb-video" controls onloadstart="this.playbackRate = 1.0;"
                                 autoplay loop muted playsinline
@@ -1194,11 +1452,188 @@
                             <p style="text-align: center;"><strong>${scene.labels[index]}</strong></p>
                         </div>
                     `;
-                    carousel.append(slide);
+                        carousel.append(slide);
+                    });
+
+                    // Reinitialize slick carousel
+                    carousel.slick({
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        arrows: true,
+                        dots: false,
+                        lazyLoad: 'ondemand',
+                        touchMove: true,
+                        responsive: [
+                            { breakpoint: 1024, settings: { slidesToShow: 2 } },
+                            { breakpoint: 768, settings: { slidesToShow: 1 } }
+                        ]
+                    });
+                }
+
+                // Scene selector change handlers
+                $('#scene-selector').on('change', function () {
+                    const selectedScene = $(this).val();
+                    updatePCACarousel(selectedScene);
                 });
-                
-                // Reinitialize slick carousel
-                carousel.slick({
+
+                $('#edge-01-scene-selector').on('change', function () {
+                    const selectedScene = $(this).val();
+                    updateEdgeCarousel(selectedScene, '0.1', '#edge-01-carousel');
+                });
+
+                $('#edge-03-scene-selector').on('change', function () {
+                    const selectedScene = $(this).val();
+                    updateEdgeCarousel(selectedScene, '0.3', '#edge-03-carousel');
+                });
+
+                // NeRF scene selector change handlers
+                $('#nerf-scene-selector').on('change', function () {
+                    const selectedScene = $(this).val();
+                    updateNerfPCACarousel(selectedScene);
+                });
+
+                $('#nerf-edge-01-scene-selector').on('change', function () {
+                    const selectedScene = $(this).val();
+                    updateNerfEdgeCarousel(selectedScene, '0.1', '#nerf-edge-01-carousel');
+                });
+
+                $('#nerf-edge-03-scene-selector').on('change', function () {
+                    const selectedScene = $(this).val();
+                    updateNerfEdgeCarousel(selectedScene, '0.3', '#nerf-edge-03-carousel');
+                });
+
+                // Segmentation scene selector change handlers
+                $('#segmentation-scene-selector').on('change', function () {
+                    const selectedScene = $(this).val();
+                    updateSegmentationCarousel(selectedScene);
+                });
+
+                $('#nerf-segmentation-scene-selector').on('change', function () {
+                    const selectedScene = $(this).val();
+                    updateNerfSegmentationCarousel(selectedScene);
+                });
+
+                // Init carousels (only those still using .task-carousel wrappers, excluding the dynamic ones)
+                $('.task-carousel:not(#pca-carousel):not(#edge-01-carousel):not(#edge-03-carousel):not(#nerf-pca-carousel):not(#nerf-edge-01-carousel):not(#nerf-edge-03-carousel):not(#segmentation-carousel):not(#nerf-segmentation-carousel)').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                        { breakpoint: 768, settings: { slidesToShow: 2 } },
+                        { breakpoint: 480, settings: { slidesToShow: 1 } }
+                    ]
+                });
+
+                // Horizontal track‑pad scroll → carousel navigation; let vertical scroll bubble up
+                $('.task-carousel:not(#pca-carousel):not(#edge-01-carousel):not(#edge-03-carousel):not(#nerf-pca-carousel):not(#nerf-edge-01-carousel):not(#nerf-edge-03-carousel)').on('wheel', function (e) {
+                    const deltaX = e.originalEvent.deltaX;
+                    const deltaY = e.originalEvent.deltaY;
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        e.preventDefault();
+                        $(this).slick(deltaX < 0 ? 'slickPrev' : 'slickNext');
+                    }
+                });
+
+                // Initialize all dynamic carousels with default scenes
+                $('#pca-carousel').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                        { breakpoint: 768, settings: { slidesToShow: 2 } },
+                        { breakpoint: 480, settings: { slidesToShow: 1 } }
+                    ]
+                });
+
+                $('#edge-01-carousel').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                        { breakpoint: 768, settings: { slidesToShow: 2 } },
+                        { breakpoint: 480, settings: { slidesToShow: 1 } }
+                    ]
+                });
+
+                $('#edge-03-carousel').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                        { breakpoint: 768, settings: { slidesToShow: 2 } },
+                        { breakpoint: 480, settings: { slidesToShow: 1 } }
+                    ]
+                });
+
+                // Initialize NeRF carousels
+                $('#nerf-pca-carousel').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                        { breakpoint: 768, settings: { slidesToShow: 2 } },
+                        { breakpoint: 480, settings: { slidesToShow: 1 } }
+                    ]
+                });
+
+                $('#nerf-edge-01-carousel').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                        { breakpoint: 768, settings: { slidesToShow: 2 } },
+                        { breakpoint: 480, settings: { slidesToShow: 1 } }
+                    ]
+                });
+
+                $('#nerf-edge-03-carousel').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                        { breakpoint: 768, settings: { slidesToShow: 2 } },
+                        { breakpoint: 480, settings: { slidesToShow: 1 } }
+                    ]
+                });
+
+                // Initialize segmentation carousels
+                $('#segmentation-carousel').slick({
                     slidesToShow: 3,
                     slidesToScroll: 1,
                     infinite: false,
@@ -1211,243 +1646,66 @@
                         { breakpoint: 768, settings: { slidesToShow: 1 } }
                     ]
                 });
-            }
 
-            // Scene selector change handlers
-            $('#scene-selector').on('change', function() {
-                const selectedScene = $(this).val();
-                updatePCACarousel(selectedScene);
-            });
+                $('#nerf-segmentation-carousel').slick({
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 2 } },
+                        { breakpoint: 768, settings: { slidesToShow: 1 } }
+                    ]
+                });
 
-            $('#edge-01-scene-selector').on('change', function() {
-                const selectedScene = $(this).val();
-                updateEdgeCarousel(selectedScene, '0.1', '#edge-01-carousel');
-            });
+                // Add wheel events for all dynamic carousels
+                $('#pca-carousel, #edge-01-carousel, #edge-03-carousel, #nerf-pca-carousel, #nerf-edge-01-carousel, #nerf-edge-03-carousel, #segmentation-carousel, #nerf-segmentation-carousel').on('wheel', function (e) {
+                    const deltaX = e.originalEvent.deltaX;
+                    const deltaY = e.originalEvent.deltaY;
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        e.preventDefault();
+                        $(this).slick(deltaX < 0 ? 'slickPrev' : 'slickNext');
+                    }
+                });
 
-            $('#edge-03-scene-selector').on('change', function() {
-                const selectedScene = $(this).val();
-                updateEdgeCarousel(selectedScene, '0.3', '#edge-03-carousel');
-            });
+                $('.task-carousel-exp').slick({
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    arrows: true,
+                    dots: false,
+                    lazyLoad: 'ondemand',
+                    touchMove: true,
+                    responsive: [
+                        { breakpoint: 1024, settings: { slidesToShow: 1 } },
+                        { breakpoint: 768, settings: { slidesToShow: 1 } },
+                        { breakpoint: 480, settings: { slidesToShow: 1 } }
+                    ]
+                });
 
-            // NeRF scene selector change handlers
-            $('#nerf-scene-selector').on('change', function() {
-                const selectedScene = $(this).val();
-                updateNerfPCACarousel(selectedScene);
-            });
+                // Horizontal track‑pad scroll → carousel navigation; let vertical scroll bubble up
+                $('.task-carousel').on('wheel', function (e) {
+                    const deltaX = e.originalEvent.deltaX;
+                    const deltaY = e.originalEvent.deltaY;
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        e.preventDefault();
+                        $(this).slick(deltaX < 0 ? 'slickPrev' : 'slickNext');
+                    }
+                });
+                $('.task-carousel-exp').on('wheel', function (e) {
+                    const deltaX = e.originalEvent.deltaX;
+                    const deltaY = e.originalEvent.deltaY;
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        e.preventDefault();
+                        $(this).slick(deltaX < 0 ? 'slickPrev' : 'slickNext');
+                    }
+                });
 
-            $('#nerf-edge-01-scene-selector').on('change', function() {
-                const selectedScene = $(this).val();
-                updateNerfEdgeCarousel(selectedScene, '0.1', '#nerf-edge-01-carousel');
             });
-
-            $('#nerf-edge-03-scene-selector').on('change', function() {
-                const selectedScene = $(this).val();
-                updateNerfEdgeCarousel(selectedScene, '0.3', '#nerf-edge-03-carousel');
-            });
-
-            // Segmentation scene selector change handlers
-            $('#segmentation-scene-selector').on('change', function() {
-                const selectedScene = $(this).val();
-                updateSegmentationCarousel(selectedScene);
-            });
-
-            $('#nerf-segmentation-scene-selector').on('change', function() {
-                const selectedScene = $(this).val();
-                updateNerfSegmentationCarousel(selectedScene);
-            });
-
-            // Init carousels (only those still using .task-carousel wrappers, excluding the dynamic ones)
-            $('.task-carousel:not(#pca-carousel):not(#edge-01-carousel):not(#edge-03-carousel):not(#nerf-pca-carousel):not(#nerf-edge-01-carousel):not(#nerf-edge-03-carousel):not(#segmentation-carousel):not(#nerf-segmentation-carousel)').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                    { breakpoint: 768, settings: { slidesToShow: 2 } },
-                    { breakpoint: 480, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            // Horizontal track‑pad scroll → carousel navigation; let vertical scroll bubble up
-            $('.task-carousel:not(#pca-carousel):not(#edge-01-carousel):not(#edge-03-carousel):not(#nerf-pca-carousel):not(#nerf-edge-01-carousel):not(#nerf-edge-03-carousel)').on('wheel', function (e) {
-                const deltaX = e.originalEvent.deltaX;
-                const deltaY = e.originalEvent.deltaY;
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    e.preventDefault();
-                    $(this).slick(deltaX < 0 ? 'slickPrev' : 'slickNext');
-                }
-            });
-
-            // Initialize all dynamic carousels with default scenes
-            $('#pca-carousel').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                    { breakpoint: 768, settings: { slidesToShow: 2 } },
-                    { breakpoint: 480, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            $('#edge-01-carousel').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                    { breakpoint: 768, settings: { slidesToShow: 2 } },
-                    { breakpoint: 480, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            $('#edge-03-carousel').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                    { breakpoint: 768, settings: { slidesToShow: 2 } },
-                    { breakpoint: 480, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            // Initialize NeRF carousels
-            $('#nerf-pca-carousel').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                    { breakpoint: 768, settings: { slidesToShow: 2 } },
-                    { breakpoint: 480, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            $('#nerf-edge-01-carousel').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                    { breakpoint: 768, settings: { slidesToShow: 2 } },
-                    { breakpoint: 480, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            $('#nerf-edge-03-carousel').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                    { breakpoint: 768, settings: { slidesToShow: 2 } },
-                    { breakpoint: 480, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            // Initialize segmentation carousels
-            $('#segmentation-carousel').slick({
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 2 } },
-                    { breakpoint: 768, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            $('#nerf-segmentation-carousel').slick({
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 2 } },
-                    { breakpoint: 768, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            // Add wheel events for all dynamic carousels
-            $('#pca-carousel, #edge-01-carousel, #edge-03-carousel, #nerf-pca-carousel, #nerf-edge-01-carousel, #nerf-edge-03-carousel, #segmentation-carousel, #nerf-segmentation-carousel').on('wheel', function (e) {
-                const deltaX = e.originalEvent.deltaX;
-                const deltaY = e.originalEvent.deltaY;
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    e.preventDefault();
-                    $(this).slick(deltaX < 0 ? 'slickPrev' : 'slickNext');
-                }
-            });
-
-            $('.task-carousel-exp').slick({
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                lazyLoad: 'ondemand',
-                touchMove: true,
-                responsive: [
-                    { breakpoint: 1024, settings: { slidesToShow: 1 } },
-                    { breakpoint: 768, settings: { slidesToShow: 1 } },
-                    { breakpoint: 480, settings: { slidesToShow: 1 } }
-                ]
-            });
-
-            // Horizontal track‑pad scroll → carousel navigation; let vertical scroll bubble up
-            $('.task-carousel').on('wheel', function (e) {
-                const deltaX = e.originalEvent.deltaX;
-                const deltaY = e.originalEvent.deltaY;
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    e.preventDefault();
-                    $(this).slick(deltaX < 0 ? 'slickPrev' : 'slickNext');
-                }
-            });
-            $('.task-carousel-exp').on('wheel', function (e) {
-                const deltaX = e.originalEvent.deltaX;
-                const deltaY = e.originalEvent.deltaY;
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    e.preventDefault();
-                    $(this).slick(deltaX < 0 ? 'slickPrev' : 'slickNext');
-                }
-            });
-
-        });
-    </script>
+        </script>
 </body>
 
 </html>
