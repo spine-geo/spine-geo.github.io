@@ -31,7 +31,7 @@
   </a>
   <h4 align="center">
     <a href="https://spine-geo.github.io/">Project Page</a> 
-    | <a href= "#">arXiv (Coming Soon)</a>
+    | <a href= "https://arxiv.org/abs/2510.03104">arXiv</a>
   </h4>
   <div align="center"></div>
 </p>
